@@ -83,7 +83,7 @@ Please consider citing this paper if you use our model or dataset in your work:
 @inproceedings{kim2021,
   title={Writing in The Air: Unconstrained Text Recognition from Finger Movement Using Spatio-Temporal Convolution},
   author={Ue-Hwan Kim*, Yewon Hwang*, Sun-Kyung Lee and Jong-Hwan Kim},
-  journal={arXiv preprint arXiv:xxxxxx},
+  journal={arXiv preprint arXiv:09021},
   year={2021}
 }
 ```
