@@ -13,7 +13,7 @@ from torch.nn.utils.rnn import pad_sequence
 from model import GestureTranslator
 from data import AirTypingDataset
 from options import AirTypingOptions
-from utils import WarmupMultiStepLR, Lamb, sec_to_hm_str, cer, calc_seq_len, calc_seq_len_mc3, calc_seq_len_rmc3, seq_len_r3d_kor, seq_len_mc3_kor, seq_len_rmc3_kor
+from utils import WarmupMultiStepLR, Lamb, sec_to_hm_str, cer, calc_seq_len, calc_seq_len_mc3, calc_seq_len_rmc3, seq_len_r3d_kor, seq_len_mc3_kor, seq_len_rmc3_kor, calc_seq_len_2d_eng, calc_seq_len_2d_kor
 
 
 options = AirTypingOptions()
@@ -31,6 +31,8 @@ def pad_collate(batch):
             x_lens = torch.LongTensor([calc_seq_len_rmc3(len(x)) for x in xx])
         elif opts.model_type == 'mc3':
             x_lens = torch.LongTensor([calc_seq_len_mc3(len(x)) for x in xx])
+        elif opts.model_type == 'r2d':
+            x_lens = torch.LongTensor([calc_seq_len_2d_eng(len(x)) for x in xx])
 
     elif opts.data_type == 'korean' and opts.num_res_layer == 2:
         if opts.model_type == 'r3d':
@@ -41,6 +43,8 @@ def pad_collate(batch):
             x_lens = torch.LongTensor([seq_len_rmc3_kor(len(x)) for x in xx])
         elif opts.model_type == 'mc3':
             x_lens = torch.LongTensor([seq_len_mc3_kor(len(x)) for x in xx])
+        elif opts.model_type == 'r2d':
+            x_lens = torch.LongTensor([calc_seq_len_2d_kor(len(x)) for x in xx])
 
     y_lens = torch.LongTensor([len(y) for y in yy])
     return xx_pad, yy_pad, x_lens, y_lens

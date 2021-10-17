@@ -7,7 +7,7 @@ import torch.nn.functional as F
 from torch.nn.utils.rnn import pack_padded_sequence
 from torch.nn.utils.rnn import pad_packed_sequence
 
-from resnet3d import r3d, mc3, rmc3, r2plus1d
+from resnet3d import r2d, r3d, mc3, rmc3, r2plus1d
 
 
 class GestureTranslator(nn.Module):
@@ -34,7 +34,9 @@ class GestureTranslator(nn.Module):
         elif self.opts.model_type == "rmc3":    # 2D Conv => 3D Conv
             self.encoder_module = rmc3()
         elif self.opts.model_type == "twoplusone":
-            self.encoder_module = r2plus1d()        
+            self.encoder_module = r2plus1d() 
+        elif self.opts.model_type == "r2d":       # 2D Conv
+            self.encoder_module = r2d()       
         
         if self.opts.pretrained == "True":
             if self.opts.model_type == "r3d":  # 3D Conv
@@ -70,22 +72,38 @@ class GestureTranslator(nn.Module):
                 opts.num_layers,
                 batch_first=True,
                 bidirectional=True)
-        
-        if self.recurrent_module:
+        elif self.opts.recurrent_type.lower() == 'transformers':
+            self.encoder_layer = nn.TransformerEncoderLayer(
+                d_model=opts.d_model,
+                nhead=opts.nhead,
+                batch_first=True)
+            self.recurrent_module = nn.TransformerEncoder(
+                encoder_layer=self.encoder_layer,
+                num_layers=opts.num_encoder_layer)
+
+        if self.recurrent_module and self.opts.recurrent_type.lower() != 'transformers':
             self.fc1 = nn.Linear(2 * opts.hidden_size, opts.hidden_size_fc)
             self.fc2 = nn.Linear(opts.hidden_size_fc, self.num_class)
-        else:
+        elif self.recurrent_module and self.opts.recurrent_type.lower() == 'transformers':
+            self.fc1 = nn.Linear(opts.d_model, opts.hidden_size_fc)
+            self.fc2 = nn.Linear(opts.hidden_size_fc, self.num_class)
+        elif self.recurrent_module is None:
             self.fc1 = None
             self.fc2 = nn.Linear(opts.input_size, self.num_class)
 
     def forward(self, seq_img, seq_lens):
         embeddings = self.encoder_module(seq_img.permute(0, 2, 1, 3, 4))  # (batch_size, seq_length, feature_size)
-        if self.recurrent_module:
+        if self.recurrent_module and self.opts.recurrent_type.lower() != 'transformers':
             x_packed = pack_padded_sequence(embeddings, seq_lens, batch_first=True, enforce_sorted=False)
             outputs_packed, _ = self.recurrent_module(x_packed)           # (batch_size, seq_length, bi * hidden_size)
             outputs_padded, _ = pad_packed_sequence(outputs_packed, batch_first=True)
             outputs = F.relu(self.fc1(outputs_padded))                    # (batch_size, seq_length, hidden_size_fc)
             outputs = self.fc2(outputs)                                   # (batch_size, seq_length, num_class)
+            return outputs
+        elif self.recurrent_module and self.opts.recurrent_type.lower() == 'transformers':
+            outputs = self.recurrent_module(embeddings)
+            outputs = F.relu(self.fc1(outputs))
+            outputs = self.fc2(outputs)
             return outputs
         outputs = self.fc2(embeddings)
         return outputs

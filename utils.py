@@ -16,6 +16,19 @@ HANGUL = 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅃㅉㄸㄲㅆㄳㄵㄶㄺ�
 ALPHA_HAN = 'abcdefghijklmnopqrstuvwxyzㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎㅃㅉㄸㄲㅆㄳㄵㄶㄺㄻㄼㄽㄾㄿㅀㅀㅄㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣㅐㅒㅔㅖㅘㅙㅚㅝㅞㅟㅢᴥ '
 
 
+def calc_seq_len_2d_kor(len_in):
+    len_out = len_in
+    len_out = len_out + 2
+    len_out = math.floor((len_out - 2) / 2) + 1
+    return len_out
+
+
+def calc_seq_len_2d_eng(len_in):
+    len_out = len_in
+    len_out = math.floor((len_out - 2) / 2) + 1
+    return len_out
+
+
 def calc_seq_len(len_in):       # 2+1(eng&kor) & r3d(eng)
     len_out = len_in
     len_out = math.floor((len_out - 3 + 2) / 2) + 1
