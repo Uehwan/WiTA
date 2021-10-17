@@ -43,7 +43,7 @@ class AirTypingOptions:
         # MODEL options
         self.parser.add_argument("--model_type",
                                  type=str,
-                                 help="model type ['r3d', 'mc3', 'rmc3', 'twoplusone']",
+                                 help="model type ['r2d', 'r3d', 'mc3', 'rmc3', 'twoplusone']",
                                  default='r3d')
         self.parser.add_argument("--num_res_layer",
                                  type=int,
@@ -69,6 +69,18 @@ class AirTypingOptions:
                                  type=int,
                                  help="the number of recurrent layers",
                                  default=2)
+        self.parser.add_argument("--num_encoder_layer",
+                                 type=int,
+                                 help="the number of encoder layers in transformer encoder",
+                                 default=6)
+        self.parser.add_argument("--d_model",
+                                 type=int,
+                                 help="the number of features for transformer",
+                                 default=256)
+        self.parser.add_argument("--nhead",
+                                 type=int,
+                                 help="the number of heads for transformer",
+                                 default=8)
         self.parser.add_argument("--hidden_size_fc",
                                  type=int,
                                  help="the number of features in hidden states of fc layer",

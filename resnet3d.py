@@ -9,7 +9,7 @@ from options import AirTypingOptions
 options = AirTypingOptions()
 opts = options.parse()
 
-__all__ = ['r3d', 'mc3', 'rmc3', 'r2plus1d']
+__all__ = ['r2d', 'r3d', 'mc3', 'rmc3', 'r2plus1d']
 TRACK_RUNNING = opts.track_running
 NUM_LAYER = opts.num_res_layer
 STEM_TEMPORAL_KERNEL = 1 if opts.data_type == 'korean' and NUM_LAYER == 2 else 3
@@ -290,6 +290,24 @@ class VideoResNet(nn.Module):
 def _video_resnet(arch, **kwargs):
     model = VideoResNet(**kwargs)
     return model
+
+
+def r2d(**kwargs):
+    """Construct 10 layer Resnet3D model as in
+    https://arxiv.org/abs/1711.11248
+
+    Args:
+        None
+
+    Returns:
+        nn.Module: R3D-10 network
+    """
+
+    return _video_resnet('r2d',
+                         block=BasicBlock,
+                         conv_makers=[Conv3DNoTemporal] * 4,
+                         layers=[NUM_LAYER, NUM_LAYER, NUM_LAYER, NUM_LAYER],
+                         stem=BasicStem, **kwargs)
 
 
 def r3d(**kwargs):
