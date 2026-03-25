@@ -29,7 +29,7 @@ cd WiTA
 ```
 
 ### Data Preparation
-The full data can be access through [this link](https://kaistackr-my.sharepoint.com/:f:/g/personal/ykh5013_kaist_ac_kr/Eo8xavj1KFpOpq9pZ3sa4aIBnP-2-V8h9s8AI5QqD-cuFA?e=e4dsJq).  
+The full data can be accessed through [this link](https://huggingface.co/datasets/yewon816/WiTA/tree/main).  
 The dataset in the link is constructed as follows:
 ```bash
 |---- WITA
@@ -80,11 +80,14 @@ To evaluate the model, simply run [test.py](test.py)
 ## Citation
 Please consider citing this paper if you use our model or dataset in your work:
 ```bash
-@inproceedings{kim2021,
-  title={Writing in The Air: Unconstrained Text Recognition from Finger Movement Using Spatio-Temporal Convolution},
-  author={Ue-Hwan Kim*, Yewon Hwang*, Sun-Kyung Lee and Jong-Hwan Kim},
-  journal={arXiv preprint arXiv:09021},
-  year={2021}
+@article{kim2023writing,
+  author={Kim, Ue-Hwan and Hwang, Yewon and Lee, Sun-Kyung and Kim, Jong-Hwan},
+  journal={IEEE Transactions on Artificial Intelligence}, 
+  title={Writing in the Air: Unconstrained Text Recognition From Finger Movement Using Spatio-Temporal Convolution}, 
+  year={2023},
+  volume={4},
+  number={6},
+  pages={1386-1398}
 }
 ```
 
